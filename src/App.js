@@ -11,12 +11,20 @@ export default function App() {
     setItems((items) => items.filter((item) => item.id !== id));
   }
 
+  function handleToggleItem(id) {
+    setItems((items) =>
+      items.map((item) =>
+        item.id === id ? { ...item, packed: !item.packed } : item,
+      ),
+    );
+  }
+
   return (
     <div className="app">
       <Logo />
       <Form onAddItems={handleAddItems} />
       <PackingList items={items} onDeleteItem={handleDeleteItem} />
-      <Stats />
+      <Stats items={items} />
     </div>
   );
 }
@@ -82,6 +90,7 @@ function PackingList({ items, onDeleteItem }) {
 function Item({ item, onDeleteItem }) {
   return (
     <li>
+      <input type="checkbox" value={item.packed} onChange={() => {}} />
       <span style={item.packed ? { textDecoration: "line-through" } : {}}>
         {item.quantity} {item.description}
       </span>
@@ -90,10 +99,16 @@ function Item({ item, onDeleteItem }) {
   );
 }
 
-function Stats() {
+function Stats({ items }) {
+  const numItems = items.length;
+  const numPacked = items.filter((item) => item.packed).length;
+
   return (
     <footer className="stats">
-      <em>💼 You have X items on your list, and you already packed X (X%)</em>
+      <em>
+        💼 You have {numItems} items on your list, and you already packed{" "}
+        {numPacked} (X%)
+      </em>
     </footer>
   );
 }
